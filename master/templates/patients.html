@@ -36,50 +36,45 @@ Dashboard
                     id="mobile" type="text" placeholder="(+1) 765 8798 345">
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="mobile">
-                    Doctor Reference
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="doctor">
+                    Select Doctor
                 </label>
-                <select name="firmname"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="firmname">
-                    <option value="" disabled selected>Select a Doctor...</option>
-
-                    <option value="dr_serena_silverstone">Dr. Serena Silverstone</option>
-                    <option value="dr_winston_evergreen">Dr. Winston Evergreen</option>
-                    <option value="dr_olivia_starling">Dr. Olivia Starling</option>
-                    <option value="dr_maxwell_thunderstrike">Dr. Maxwell Thunderstrike</option>
-                    <option value="dr_isabella_moonshadow">Dr. Isabella Moonshadow</option>
-
-                    <!-- Add more options as needed -->
-                </select>
-                <!-- <i class="fa fa-chevron-circle-down absolute top-0 right-5 mt-2 mr-3 text-gray-600" aria-hidden="true"></i> -->
+                <div class="relative">
+                    <select name="doctor"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="doctor">
+                            <option value="" disabled selected>Select a Doctor...</option>
+                            {% for doctor in doctors %}
+                            <option value="{{doctor.id}}">{{doctor.name}}</option>
+                            {% endfor %}
+                    </select>
+                    <i class="fa fa-chevron-circle-down absolute top-0 right-0 mt-2 mr-3 text-gray-600" aria-hidden="true"></i>
+                </div>
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="mobile">
-                    Report Type
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="report_type">
+                    Select Report
                 </label>
-                <select name="firmname"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="firmname">
-                    <option value="" disabled selected>Select a Report...</option>
-
-                    <option value="lab_report_cbc">Complete Blood Count (CBC)</option>
-                    <option value="lab_report_cholesterol">Cholesterol Levels Analysis</option>
-                    <option value="lab_report_liver_function">Liver Function Test</option>
-                    <option value="lab_report_urinalysis">Urinalysis Report</option>
-                    <option value="lab_report_glucose">Glucose Tolerance Test</option>
-
-                    <!-- Add more options as needed -->
-                </select>
-                <!-- <i class="fa fa-chevron-circle-down absolute top-0 right-0 mt-2 mr-3 text-gray-600" aria-hidden="true"></i> -->
+                <div class="relative">
+                    <select name="report_type"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="report_type">
+                            <option value="" disabled selected>Select a Report...</option>
+                            {% for report in reports %}
+                            <option value="{{report.id}}">{{report.name}}</option>
+                            {% endfor %}
+                        
+                    </select>
+                    <i class="fa fa-chevron-circle-down absolute top-0 right-0 mt-2 mr-3 text-gray-600" aria-hidden="true"></i>
+                </div>
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="mobile">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="payment">
                     Paid Payment
                 </label>
-                <input name="number"
+                <input name="payment"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="mobile" type="text" placeholder="Rs. 500">
+                    id="number" type="text" placeholder="Rs. 500">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
@@ -135,20 +130,30 @@ Dashboard
                                     </tr>
                                 </thead>
                                 <tbody class="text-sm divide-y divide-gray-100">
+                                    {% if patients|length == 0 %}
+                                    <tr class="bg-white dark:bg-gray-800">
+                                        <td colspan="6" class="px-6 py-4 text-center text-xl">
+                                        No patients available.
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    {% for patient in patients %}
                                     <tr>
                                         <td class="p-2 whitespace-nowrap ">
                                             <div class="flex items-center">
-                                                <div class="w-10 h-10 flex-shrink-0"><img class="rounded-full"
+                                                <!-- <div class="w-10 h-10 flex-shrink-0">
+                                                    <img class="rounded-full"
                                                         src="https://raw.githubusercontent.com/cruip/vuejs-admin-dashboard-template/main/src/images/user-36-05.jpg"
-                                                        alt="Alex Shatov"></div>
-                                                <div class="flex items-center gap-3 ml-2">
+                                                        alt="Alex Shatov">
+                                                </div> -->
+                                                <div class="flex items-center gap-3">
                                                     <div class="flex flex-col">
                                                         <p
                                                             class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                                                            john doe</p>
+                                                            {{patient.first_name}} {{patient.last_name}} [ {{patient.id}} ]</p>
                                                         <p
                                                             class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">
-                                                            (+1) 987 4565 345</p>
+                                                            {{patient.mobile}}</p>
                                                     </div>
                                                 </div>
 
@@ -158,16 +163,16 @@ Dashboard
                                                 <div class="flex flex-col">
                                                     <p
                                                         class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                                                        Dr. Winston Evergreen
+                                                        {{patient.doctor_id}}
                                                         </p>
                                                     <p
-                                                        class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">Complete Blood Count (CBC)
+                                                        class="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal opacity-70">{{patient.report_type}}
                                                         </p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="p-2 whitespace-nowrap">
-                                            <div class="text-left font-medium text-green-500">$2,890.66</div>
+                                            <div class="text-left font-medium text-green-500">{{patient.payment_status}}</div>
                                         </td>
                                         <td class="p-2 whitespace-nowrap ">
                                             <div class="flex">
@@ -175,12 +180,13 @@ Dashboard
                                                         class="fa fa-pencil-square-o fa-2x mr-2"
                                                         aria-hidden="true"></i></a>
                                                 |
-                                                <a href="" class="text-red-500"><i class="fa fa-trash fa-2x ml-2"
-                                                        aria-hidden="true"></i></a>
+                                                <a href="{% url 'patient_delete' patient_id=patient.id %}" class="text-red-500"><i class="fa fa-trash fa-2x ml-2"
+                                                        aria-hidden="true"></i> [{{patient.id}}]</a>
                                             </div>
                                         </td>
                                     </tr>
-                                   
+                                    {% endfor %}
+                                    {% endif %}
                                 </tbody>
 
                             </table>
