@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import StaffRegister
-from master.utils.generate_unique_id import generate_otp
+from master.utils.generate_unique_id import genrate_otp
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -50,7 +50,7 @@ def forgot_password_view(request):
             print("User doesn't exist")
         else:
             if check_user:
-                otp_ = generate_otp()
+                otp_ = genrate_otp()
                 subject = "Authentication Code for [Forgot password]"
                 message = f"Code for [Password Change]: {otp_}"
                 from_email = settings.EMAIL_HOST_USER
