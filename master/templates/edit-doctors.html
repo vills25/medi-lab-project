@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block body %}
+<div class="flex flex-col lg:flex-row">
+    <!-- Form Section -->
+    <div class="lg:w-2/3 justify-center ">
+        <form action="" method="post" class="bg-white shadow-md rounded px-8 pb-8 m-2">
+            <h3 class="self-center text-xl mb-6 font-semibold whitespace-nowrap dark:text-white text-blue-700">
+                Edit Doctor form {{ humanize }}</h3>
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                Name
+                </label>
+                <input name="name"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="name" type="text" placeholder="dr. jhon doe"  value="{{ doctor.name }}">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="degree">
+                  Degree    
+                </label>
+                <input name="degree"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="degree" type="text" placeholder="ex. MBBS" value="{{ doctor.degree }}">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="contact">
+                  Contact    
+                </label>
+                <input name="contact"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="contact" type="text" placeholder="ex. MBBS" value="{{ doctor.contact }}">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="summary">
+                  Summary    
+                </label>
+                <input name="summary"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="summary" type="text" placeholder="ex. MBBS" value="{{doctor.summary}}">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
+                  Address    
+                </label>
+                <input name="address"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="address" type="text" placeholder="ex. MBBS" value="{{ doctor.address }}">
+            </div>
+            <!-- Other form fields using Jinja variables -->
+
+            <div class="flex items-center justify-between">
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

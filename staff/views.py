@@ -3,6 +3,7 @@ from .models import StaffRegister
 from master.utils.generate_unique_id import genrate_otp
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import JsonResponse
 
 def staff_authenticated(view_func):
     def wrapper(request, *args, **kwargs):
@@ -96,5 +97,25 @@ def logout(request):
     request.session.clear()
     return redirect('login_view')
 
+def resend_otp_view(request):
+    if request.method == 'GET':
+        email_ = request.GET.get('email')
+        if email_:
+            try:
+                check_user = StaffRegister.objects.get(email=email_)
+            except StaffRegister.DoesNotExist:
+                print("User doesn't exist")
 
-# Create your views here.
+            if check_user:
+                otp_ = genrate_otp()
+                subject = "Aithentication Code for [Forgot Password]"
+                message = f"Code for [Password Change]:{otp_}"
+                from_email = settings.EMAIL_HOST_USER
+                rec_list = [f"{email_}"]
+                send_mail(subject, message, from_email, rec_list)
+                check_user.otp = otp_
+                check_user.save()
+                context = {'email':email_}
+                return render(request, 'otp-verification.html', context)
+    
+    return JsonResponse({'success':False,'message':'Failed to resend OTP'})

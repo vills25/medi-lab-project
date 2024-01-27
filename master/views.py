@@ -7,6 +7,8 @@ import humanize
 
 current_time = timezone.now()
 
+
+
 def get_doctor_details(doctor_id=None):
     if doctor_id is None:
         get_doctor = doctor.objects.all().order_by('-id')
@@ -44,6 +46,93 @@ def doctors_view(request):
     return render(request, 'doctors.html', context)
 
 @staff_authenticated
+def add_doctor_view(request):
+
+    if request.method == 'POST':
+        name_ = request.POST['name']
+        degree_ = request.POST['degree']
+        contact_ = request.POST['contact']
+        summary_ = request.POST['summary']
+        address_ = request.POST['address']
+
+        new_doctor = doctor.objects.create(
+            name=name_,
+            degree=degree_,
+            contact=contact_,
+            summary=summary_,
+            address=address_
+        )
+        new_doctor.save()
+        print('doctor addedd')
+        return redirect('doctors_view')
+    return render(request, 'add-doctors.html')
+
+#  @staff_authenticated
+# def doctor_edit_view(request, doctor_id):
+#     get_doctor = get_doctor_details(doctor_id=doctor_id)
+#     if request.method == 'POST':
+#         name_ = request.POST['name']
+#         degree_ = request.POST['degree']
+#         contact_ = request.POST['contact']
+#         summary_ = request.POST['summary']
+#         address_ = request.POST['address']
+
+#         get_doctor.name=name_,
+#         get_doctor.degree=degree_,
+#         get_doctor.contact=contact_,
+#         get_doctor.summary=summary_,
+#         get_doctor.address=address_
+
+#         get_doctor.save()
+#         print("Doctor data updated")
+#         return redirect('doctors_view')
+       
+#     context = {
+#         'doctors':get_doctor_details(),
+#     }
+#     return render(request, 'edit-doctors.html', context)
+
+@staff_authenticated
+def doctor_edit_view(request, doctor_id):
+    get_doctor = get_doctor_details(doctor_id=doctor_id)
+    if request.method == 'POST':
+        name_ = request.POST['name']
+        degree_ = request.POST['degree']
+        contact_ = request.POST['contact']
+        summary_ = request.POST['summary']
+        address_ = request.POST['address']
+
+        update_result = update_doctor_data(doctor_id, name_, degree_, contact_, summary_, address_)
+
+        if update_result:
+            print("Doctor data updated")
+            return redirect('doctors_view')
+        else:
+            print("Failed to update doctor data")
+            # Handle the case where the doctor was not found or other errors
+            # You might want to render an error message or redirect to an error page
+       
+    context = {
+        'doctors': get_doctor_details(),
+    }
+    return render(request, 'edit-doctors.html', context)
+
+def update_doctor_data(doctor_id, name, degree, contact, summary, address):
+    try:
+        doctor_instance = doctor.objects.get(id=doctor_id)
+        doctor_instance.name = name
+        doctor_instance.degree = degree
+        doctor_instance.contact = contact
+        doctor_instance.summary = summary
+        doctor_instance.address = address
+        doctor_instance.save()
+        print("Doctor data updated successfully")
+        return True
+    except doctor.DoesNotExist:
+        print("Doctor not found")
+        return False
+
+@staff_authenticated
 def patients_view(request):
     today_patients = Patient.objects.filter(created_at__date=current_time.date())
 
@@ -73,7 +162,6 @@ def patients_view(request):
         'today_patients':today_patients,
         'current_time': current_time.date(),
         'humanize': humanize.naturalday(current_time)
-
     }
     return render(request, 'patients.html',context)
 
@@ -97,9 +185,7 @@ def patient_update(request, patient_id):
         get_patient.save()
         print("Patient data updated")
         return redirect('patients_view')
-    
-
-    
+      
     context = {
         'patient':get_patient,
         'doctors':get_doctor_details(),
@@ -153,3 +239,4 @@ def patient_delete(request, patient_id):
     get_patient.delete()
     print('patient deleted')
     return redirect('patients_view')
+
