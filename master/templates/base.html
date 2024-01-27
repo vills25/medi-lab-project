@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
 </head>
@@ -42,7 +42,7 @@
                         <a href="{% url 'patients_view' %}"><i class="fa fa-bed mr-3" aria-hidden="true"></i> Patients</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-list mr-3" aria-hidden="true"></i> Tasks</a>
+                        <a href="{% url 'tasks_view' %}"><i class="fa fa-list mr-3" aria-hidden="true"></i> Tasks</a>
                     </li>
                     <li>
                         <a href="{% url 'logout' %}"><i class="fa fa-sign-out mr-3" aria-hidden="true"></i> &nbsp;Logout</a>
@@ -77,10 +77,10 @@
 
 
 
-    <script src="{% static 'dashboard/js/jquery.min.js' %}"></script>
-    <script src="{% static 'dashboard/js/popper.js' %}"></script>
-    <script src="{% static 'dashboard/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'dashboard/js/main.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 
 </body>
 

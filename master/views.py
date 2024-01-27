@@ -4,6 +4,7 @@ from staff.views import staff_authenticated
 from .models import doctor, Patient, ReportType, paid_installment
 from datetime import timedelta
 import humanize
+import requests
 
 current_time = timezone.now()
 
@@ -240,3 +241,15 @@ def patient_delete(request, patient_id):
     print('patient deleted')
     return redirect('patients_view')
 
+@staff_authenticated
+def tasks_view(request):
+    api_url = "https://VishalSohaliya.pythonanywhere.com/"
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        api_data = response.json()
+    else:
+        api_data = []
+    context = {
+        'tasks':api_data
+    }
+    return render(request, 'tasks.html', context)
