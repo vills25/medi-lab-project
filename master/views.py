@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.contrib import messages
 from staff.views import staff_authenticated
 from .models import doctor, Patient, ReportType, paid_installment
 from datetime import timedelta
@@ -7,8 +8,6 @@ import humanize
 import requests
 
 current_time = timezone.now()
-
-
 
 def get_doctor_details(doctor_id=None):
     if doctor_id is None:
@@ -67,31 +66,6 @@ def add_doctor_view(request):
         print('doctor addedd')
         return redirect('doctors_view')
     return render(request, 'add-doctors.html')
-
-#  @staff_authenticated
-# def doctor_edit_view(request, doctor_id):
-#     get_doctor = get_doctor_details(doctor_id=doctor_id)
-#     if request.method == 'POST':
-#         name_ = request.POST['name']
-#         degree_ = request.POST['degree']
-#         contact_ = request.POST['contact']
-#         summary_ = request.POST['summary']
-#         address_ = request.POST['address']
-
-#         get_doctor.name=name_,
-#         get_doctor.degree=degree_,
-#         get_doctor.contact=contact_,
-#         get_doctor.summary=summary_,
-#         get_doctor.address=address_
-
-#         get_doctor.save()
-#         print("Doctor data updated")
-#         return redirect('doctors_view')
-       
-#     context = {
-#         'doctors':get_doctor_details(),
-#     }
-#     return render(request, 'edit-doctors.html', context)
 
 @staff_authenticated
 def doctor_edit_view(request, doctor_id):
@@ -154,7 +128,7 @@ def patients_view(request):
             address=address_
         )
         new_patient.save()
-        print('Patient addedd')
+        messages.success(request, f'{first_name_} {last_name_} - Patient added')
         return redirect('patients_view')
     context = {
         'doctors':get_doctor_details(),
@@ -184,7 +158,7 @@ def patient_update(request, patient_id):
         get_patient.report_type_id = report_type_id_
         get_patient.address = address_
         get_patient.save()
-        print("Patient data updated")
+        messages.success(request, f'Data of {first_name_} {last_name_} is updated successfully')
         return redirect('patients_view')
       
     context = {
@@ -219,13 +193,13 @@ def patient_account(request, patient_id):
                     paid_payment = payment_installment_
                 )
                 new_payment_entry.save()
-                print("payment added")
+                messages.success(request, f'Installment of "{payment_installment_}" is addedd successfully')
                 return redirect('patient_account', patient_id=patient_id)
             else:
-                print("Payment installment must be small than remaining amount")
+                messages.error(request, f'Payment installment must be small than remaining amount')
                 return redirect('patient_account', patient_id=patient_id)
         else:
-            print("You can not add 0")
+            messages.error(request, f'You can not add 0')
             return redirect('patient_account', patient_id=patient_id)
 
     context = {
@@ -238,7 +212,7 @@ def patient_account(request, patient_id):
 def patient_delete(request, patient_id):
     get_patient = get_patient_details(patient_id=patient_id)
     get_patient.delete()
-    print('patient deleted')
+    messages.success(request, 'Patient deleted')
     return redirect('patients_view')
 
 @staff_authenticated

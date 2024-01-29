@@ -4,12 +4,14 @@ from master.utils.generate_unique_id import genrate_otp
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
+from django.contrib import messages
 
 def staff_authenticated(view_func):
     def wrapper(request, *args, **kwargs):
         if 'staff_id' in request.session:
             return view_func(request, *args, **kwargs)
         else:
+            messages.info(request, 'You are not logged in yet.')
             return redirect('login_view')  
 
     return wrapper
@@ -24,7 +26,8 @@ def login_view(request):
             get_staff = StaffRegister.objects.get(staff_id=login_id_)
 
         except StaffRegister.DoesNotExist:
-            print("Invalid staff_id or password")
+            messages.info(request, 'Invalid staff_id or password')
+            return redirect('login_view')
         else:
             if get_staff:
                 print(password_ == get_staff.password)
@@ -36,10 +39,14 @@ def login_view(request):
                     request.session['email'] = get_staff.email
                     request.session['mobile'] = get_staff.mobile
                     request.session['is_activated'] = get_staff.is_activated
-                    return redirect('dashboard_view')
-                    print("Now, you are logged in")
+                    messages.success(request, "Now, you are logged in")
+                    return redirect('dashboard_view')                    
                 else:
-                    print("Your account is deactivated. Please contact to Admin.")
+                    messages.info(request, 'Invalid staff_id or password')
+                    return redirect('login_view')
+            else:
+                messages.info(request, 'Your account is deactivated. Please contact to Admin.')
+                return redirect('login_view')    
     return render(request, 'login.html')
 
 def forgot_password_view(request):
@@ -48,7 +55,8 @@ def forgot_password_view(request):
         try:
             check_user = StaffRegister.objects.get(email=email_)
         except StaffRegister.DoesNotExist:
-            print("User doesn't exist")
+           messages.info(request, "User doesn't exist")
+           return redirect('login_view')
         else:
             if check_user:
                 otp_ = genrate_otp()
@@ -73,21 +81,22 @@ def otp_verify_view(request):
         try:
             check_user = StaffRegister.objects.get(email=email_)
         except StaffRegister.DoesNotExist:
-            print("User doesn't exist")
+            messages.info(request, "User doesn't exist")
+            return redirect('login_view')
         else:
             if check_user:
                 if check_user.otp == otp_:
                     if new_password_ == confirm_password_:
                         check_user.password = new_password_
                         check_user.save()
-                        print("Password Changed")
+                        messages.success(request, "Password Changed Successfully")
                         return redirect('login_view')
                     else:
-                        print("New password and confirm password  doesn't match")
+                        messages.info(request, "New password and confirm password  doesn't match")
                         context = {'email':email_}
                         return render(request, 'otp-verification.html', context)
                 else:
-                    print("Invalid OTP!!!")
+                    messages.error(request, "Invalid OTP!!!")
                     context = {'email':email_}
                     return render(request, 'otp-verification.html', context)
 
@@ -95,6 +104,7 @@ def otp_verify_view(request):
 
 def logout(request):
     request.session.clear()
+    messages.success(request, "You are logged Out")
     return redirect('login_view')
 
 def resend_otp_view(request):
@@ -104,7 +114,7 @@ def resend_otp_view(request):
             try:
                 check_user = StaffRegister.objects.get(email=email_)
             except StaffRegister.DoesNotExist:
-                print("User doesn't exist")
+                messages.info(request, 'User Dose not Exist !!!')
 
             if check_user:
                 otp_ = genrate_otp()
