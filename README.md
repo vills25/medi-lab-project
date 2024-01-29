@@ -1,2 +1,1 @@
-# medi-test
-Practice Project Medical Center Lab
+Project Medi Center
