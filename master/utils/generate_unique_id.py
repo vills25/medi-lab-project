@@ -3,7 +3,6 @@ import random
 import os
 import uuid
 import secrets
-
 from datetime import datetime
 
 def genrate_password(digits=8):
@@ -17,7 +16,7 @@ def genrate_password(digits=8):
     for d in range(0, digits):
         password_ +=  chs[random.randint(0, len(chs) - 1)]
     return password_
-
+ 
 def genrate_otp(digits=6):
     """
     This function will genrate otp for 6/4 digits by default.

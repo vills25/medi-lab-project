@@ -31,7 +31,7 @@ class StaffRegister(BaseClass):
        
         if not self.staff_id:
             
-            last_id = CounterTable.objects.get(id=2)
+            last_id = CounterTable.objects.get(id=1)
             last_id.last_staff_id = last_id.last_staff_id + 1
             last_id.save()
             self.staff_id = 'MC000' + str(last_id.last_staff_id)
