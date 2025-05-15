@@ -35,10 +35,10 @@ class doctor(BaseClass):
     total_patient = models.IntegerField(default=0)
     summary = models.TextField()
     address = models.TextField()
-
+#############################
     def __str__(self):
         return self.name
-    
+#############################    
 class ReportType(BaseClass):
     name = models.CharField(max_length=255)
     report_charge = models.FloatField()

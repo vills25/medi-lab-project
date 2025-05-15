@@ -11,7 +11,17 @@ current_time = timezone.now()
 
 def get_doctor_details(doctor_id=None):
     if doctor_id is None:
-        get_doctor = doctor.objects.all().order_by('-id')
+        # get_doctor = doctor.objects.all().order_by('-id')
+        # for i in get_doctor:
+        #     get_list = Patient.objects.filter(doctor_id=i.id)
+        # for data in get_list:
+        #     get_doctor_data = doctor.objects.filter(id=data.doctor_id).order_by(id)
+        # print(get_doctor_data)
+        get_patient = Patient.objects.all()
+        for data in get_patient:
+            print('id--->', data.doctor_id)
+            get_doctor = doctor.objects.filter(id=data.doctor_id.id).order_by('-id')
+            print('--->>', get_doctor)
     else:
         get_doctor = doctor.objects.get(id=doctor_id)
     return get_doctor
